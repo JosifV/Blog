@@ -1,6 +1,8 @@
+require("dotenv").config();
 const UsersSchema = require("./models");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // get curent time and date
 const date = moment().format("MMMM Do YYYY, h:mm:ss a");
@@ -36,7 +38,16 @@ module.exports = {
               // ... check if password matches
               if (resp) {
                 // if they do log him in and send his mongo id as token
-                res.send(["SignIn", user._id]);
+                // res.send(["SignIn", user._id]);
+                // ... if they do log him with json-web-token containing his mongo id
+                const token = jwt.sign(
+                  { _id: user._id },
+                  process.env.JWT_SECRET,
+                  {
+                    expiresIn: "30 days"
+                  }
+                );
+                res.send(["SignIn", token]);
                 console.log(resp);
               } else {
                 // if they do not match print error message
@@ -57,7 +68,12 @@ module.exports = {
             password: hashedPassword
           }).then(user => {
             // ... and log him in with his mongo id as token
-            res.send(["SignUp", user._id]);
+            // res.send(["SignUp", user._id]);
+            // ... and log him in with json-web-token containing his mongo id
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+              expiresIn: "30 days"
+            });
+            res.send(["SignUp", token]);
           });
         }
       })
