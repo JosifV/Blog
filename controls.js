@@ -1,5 +1,6 @@
 const UsersSchema = require("./models");
 const moment = require("moment");
+const bcrypt = require("bcryptjs");
 
 // get curent time and date
 const date = moment().format("MMMM Do YYYY, h:mm:ss a");
@@ -9,20 +10,43 @@ module.exports = {
     const username = req.params.username;
     const password = req.params.password;
 
+    let hashedPassword = "";
+
+    // hash the password for better security
+    bcrypt
+      .hash(password, 8)
+      .then(resp => {
+        hashedPassword = resp;
+        console.log(resp);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
     // find user with this username
     UsersSchema.findOne({ username: username })
       // send it to client browser
       .then(user => {
         // if that user exists then...
         if (user) {
-          // ... check if password matches
-          if (user.password === password) {
-            // if they do log him in and send his mongo id as token
-            res.send(["SignIn", user._id]);
-          } else {
-            // if they do not match print error message
-            res.send("Wrong password");
-          }
+          // compare text password with hashed password fetched from the server
+          bcrypt
+            .compare(password, user.password)
+            .then(resp => {
+              // ... check if password matches
+              if (resp) {
+                // if they do log him in and send his mongo id as token
+                res.send(["SignIn", user._id]);
+                console.log(resp);
+              } else {
+                // if they do not match print error message
+                res.send("Wrong password");
+              }
+            })
+            .catch(err => {
+              // if .compare() thwor some error console log it
+              console.log(err);
+            });
         }
         // if there are no user by that username...
         else {
@@ -30,7 +54,7 @@ module.exports = {
           UsersSchema.create({
             posts: [],
             username: username,
-            password: password
+            password: hashedPassword
           }).then(user => {
             // ... and log him in with his mongo id as token
             res.send(["SignUp", user._id]);

@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 axios
-  .post("http://localhost:5000/log/username2/password2")
+  .post("http://localhost:5000/log/newuser/newpass")
   .then(resp => {
     console.log("/////////////////////");
     console.log(resp);
