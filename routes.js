@@ -1,7 +1,21 @@
 const controls = require("./controls");
-
+const multer = require("multer");
+const upload = multer({
+  limits: {
+    fileSize: 1000000 // limit file size to 1 mb
+  },
+  fileFilter(req, file, cb) {
+    // check file type, it is ok if .jpg .jpeg .png
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      // if filter failed send error
+      return cb(new Error("Please upload jpg, jpeg or png image"));
+    }
+    // if all is well send true
+    cb(undefined, true);
+  }
+});
 module.exports = app => {
-  app.post("/log/:username/:password", controls.logEvent);
+  app.post("/log/:username/:password/:email", controls.logEvent);
 
   app.get("/", controls.home);
 
@@ -26,5 +40,14 @@ module.exports = app => {
   app.delete(
     "/deletecomment/:postId/:userId/:commentid",
     controls.deleteComment
+  );
+  app.post(
+    "/upload/:userId",
+    upload.single("nameOfUpload"),
+    controls.uploadImg,
+    // this function renders error message
+    (error, req, res, next) => {
+      res.status(400).send({ error: error.message });
+    }
   );
 };

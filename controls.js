@@ -3,6 +3,7 @@ const UsersSchema = require("./models");
 const moment = require("moment");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { sendWelcomeMail } = require("./functions/emailSender");
 
 // get curent time and date
 const date = moment().format("MMMM Do YYYY, h:mm:ss a");
@@ -11,6 +12,7 @@ module.exports = {
   logEvent: (req, res, next) => {
     const username = req.params.username;
     const password = req.params.password;
+    const email = req.params.email;
 
     let hashedPassword = "";
 
@@ -37,8 +39,6 @@ module.exports = {
             .then(resp => {
               // ... check if password matches
               if (resp) {
-                // if they do log him in and send his mongo id as token
-                // res.send(["SignIn", user._id]);
                 // ... if they do log him with json-web-token containing his mongo id
                 const token = jwt.sign(
                   { _id: user._id },
@@ -65,14 +65,14 @@ module.exports = {
           UsersSchema.create({
             posts: [],
             username: username,
-            password: hashedPassword
+            password: hashedPassword,
+            email: email
           }).then(user => {
-            // ... and log him in with his mongo id as token
-            // res.send(["SignUp", user._id]);
             // ... and log him in with json-web-token containing his mongo id
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
               expiresIn: "30 days"
             });
+            sendWelcomeMail(email, username);
             res.send(["SignUp", token]);
           });
         }
@@ -425,6 +425,21 @@ module.exports = {
           .catch(err => {
             console.log(err);
           });
+      })
+      .catch(next);
+  },
+  uploadImg: (req, res, next) => {
+    const userId = req.params.userId;
+
+    // assign uploaded image to database
+    UsersSchema.findByIdAndUpdate(userId, {
+      $set: {
+        userImg: req.file.buffer
+      }
+    })
+      .then(resp => {
+        console.log(resp);
+        res.send();
       })
       .catch(next);
   }

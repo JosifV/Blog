@@ -2,7 +2,7 @@ const axios = require("axios");
 
 axios
   .post(
-    "http://localhost:5000/create/title/author/cathegory/body/5cc17e829f8ca4542419b66f"
+    "http://localhost:5000/create/title/author45/cathegory/axaxa/5cc99158485232241402a7dc"
   )
   .then(resp => {
     console.log("/////////////////////");

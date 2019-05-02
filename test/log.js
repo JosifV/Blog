@@ -1,7 +1,9 @@
 const axios = require("axios");
 
 axios
-  .post("http://localhost:5000/log/newuser/newpass2")
+  .post(
+    "http://localhost:5000/log/newuser23/newpass/emailordersvladc@gmail.com"
+  )
   .then(resp => {
     console.log("/////////////////////");
     console.log(resp);

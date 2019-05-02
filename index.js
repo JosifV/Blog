@@ -11,7 +11,7 @@ mongoose.connect(process.env.MONGO_KEY, { useNewUrlParser: true }, err => {
   if (err) {
     console.log("Error " + err);
   } else {
-    console.log("All Fine Mongoose Connected");
+    console.log("Mongoose Connected - All Fine");
   }
 });
 

@@ -1,11 +1,12 @@
 const axios = require("axios");
 
 const payload = {
-  title: "Changed TITLE"
+  title: "Changed TITLE",
+  body: "Changed BODY"
 };
 axios
   .patch(
-    "http://localhost:5000/editpost/5cc17fbefae5aa227ca48de7/5cc17e829f8ca4542419b66f",
+    "http://localhost:5000/editpost/5cc9923bf5ab0d27acae4495/5cc99158485232241402a7dc",
     payload
   )
   .then(resp => {

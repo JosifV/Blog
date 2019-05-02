@@ -2,7 +2,7 @@ const axios = require("axios");
 
 axios
   .delete(
-    "http://localhost:5000/deletepost/5cc17fbefae5aa227ca48de7/5cc17e829f8ca4542419b66f"
+    "http://localhost:5000/deletepost/5cc991f5a6beaa09fc22371a/5cc99158485232241402a7dc/5cc9934075f984135cb57b0a"
   )
   .then(resp => {
     console.log("/////////////////////");
