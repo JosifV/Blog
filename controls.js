@@ -439,7 +439,16 @@ module.exports = {
     })
       .then(resp => {
         console.log(resp);
-        res.send();
+        res.send(resp);
+      })
+      .catch(next);
+  },
+  deleteUser: (req, res, next) => {
+    const userId = req.params.userId;
+
+    UsersSchema.findByIdAndRemove(userId)
+      .then(resp => {
+        res.send(resp);
       })
       .catch(next);
   }

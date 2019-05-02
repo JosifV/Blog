@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_KEY, { useNewUrlParser: true }, err => {
 
 routes(app);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || process.env.DEV_PORT;
 app.listen(PORT, () => {
   console.log("Listening on port " + PORT);
 });

@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 axios
-  .post("http://localhost:5000/log/newuser/newpass/emailordersvladc@gmail.com")
+  .delete("http://localhost:5000/deleteuser/5ccb213accb5a220cc8e6e80")
   .then(resp => {
     console.log("/////////////////////");
     console.log(resp);

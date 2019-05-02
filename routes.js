@@ -50,4 +50,5 @@ module.exports = app => {
       res.status(400).send({ error: error.message });
     }
   );
+  app.delete("/deleteuser/:userId", controls.deleteUser);
 };
